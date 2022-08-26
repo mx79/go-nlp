@@ -34,7 +34,7 @@ func TestRemovePunctuation(t *testing.T) {
 	for _, tt := range valRemovePunctuation {
 		want := RemovePunctuation(tt.sentence)
 		if want != tt.want {
-
+			fmt.Println("RemovePunct : échec du test")
 		}
 	}
 }
