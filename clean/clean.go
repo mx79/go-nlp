@@ -87,7 +87,7 @@ func RemoveAccent(s string) string {
 // stopwordList The function that retrieves a list of stopwords, here in French
 func stopwordList() []string {
 	var stopwords []string
-	dir := path.Join("stopwords", "fr.txt")
+	dir := path.Join("./stopwords", "fr.txt")
 	data, err := os.Open(dir)
 	if err != nil {
 		log.Fatalf("Error when opening file: %s", err)
