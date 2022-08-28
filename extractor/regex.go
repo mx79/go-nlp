@@ -14,8 +14,8 @@ type RegexExtractor struct {
 	RegexDict map[string][]string
 }
 
-// NewEntityExtractor
-func NewEntityExtractor(regexFilePath string) *RegexExtractor {
+// NewRegexExtractor
+func NewRegexExtractor(regexFilePath string) *RegexExtractor {
 	// Opening the extractor.json file from the datapath
 	jsonFile, err := os.Open(regexFilePath)
 	if err != nil {
