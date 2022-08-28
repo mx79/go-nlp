@@ -9,34 +9,33 @@ import (
 	"regexp"
 )
 
-// EntityExtractor
-type EntityExtractor struct {
+// RegexExtractor
+type RegexExtractor struct {
 	RegexDict map[string][]string
 }
 
 // NewEntityExtractor
-func NewEntityExtractor(regexFilePath string) *EntityExtractor {
+func NewEntityExtractor(regexFilePath string) *RegexExtractor {
 	// Opening the extractor.json file from the datapath
-	jsonFile, e2 := os.Open(regexFilePath)
-	if e2 != nil {
-		panic(e2)
+	jsonFile, err := os.Open(regexFilePath)
+	if err != nil {
+		panic(err)
 	}
 	defer jsonFile.Close()
 	// Reading JSON file
 	byteValue, _ := io.ReadAll(jsonFile)
 	var dict map[string][]string
-	e3 := json.Unmarshal(byteValue, &dict)
-	if e3 != nil {
-		panic(e3)
+	if err = json.Unmarshal(byteValue, &dict); err != nil {
+		panic(err)
 	}
-	// Return an instance of EntityExtractor
-	return &EntityExtractor{
+	// Return an instance of RegexExtractor
+	return &RegexExtractor{
 		RegexDict: dict,
 	}
 }
 
 // GetEntity
-func (ext *EntityExtractor) GetEntity(s string) map[string]interface{} {
+func (ext *RegexExtractor) GetEntity(s string) map[string]interface{} {
 	cleanedText := clean.RemovePunctuation(s)
 	res := make(map[string]interface{})
 	var patternList []string
@@ -45,7 +44,7 @@ func (ext *EntityExtractor) GetEntity(s string) map[string]interface{} {
 			re := regexp.MustCompile(pattern)
 			if match := re.FindString(cleanedText); match != "" {
 				patternList = append(patternList, match)
-				patternList = utils.SortedWordSet(patternList)
+				patternList = utils.SortedSet(patternList)
 				if len(patternList) > 1 {
 					res[k] = patternList
 				} else {

@@ -6,6 +6,14 @@ import (
 	"strings"
 )
 
+type Global interface {
+	string | int | int8 | int16 | int32 | int64 | uint | uint8 | uint16 | uint32 | uint64 | float32 | float64
+}
+
+type SubGlobal interface {
+	string | int | float64
+}
+
 // ListToStr The function that transforms a list into a string
 func ListToStr(strSlice []string) string {
 	return strings.Join(strSlice, " ")
@@ -23,7 +31,7 @@ func SplitOnConj(s string) []string {
 }
 
 // SliceContains The function that
-func SliceContains(slice []string, value string) bool {
+func SliceContains[T Global](slice []T, value T) bool {
 	for _, v := range slice {
 		if v == value {
 			return true
@@ -33,7 +41,7 @@ func SliceContains(slice []string, value string) bool {
 }
 
 // SliceDeleteItem The function that
-func SliceDeleteItem(slice []string, value string) []string {
+func SliceDeleteItem[T Global](slice []T, value T) []T {
 	idxToDel := 0
 	for _, item := range slice {
 		if item == value {
@@ -49,15 +57,33 @@ func SliceDeleteItem(slice []string, value string) []string {
 	}
 }
 
-// SortedWordSet The function that
-func SortedWordSet(slice []string) []string {
-	var newSlice []string
+// Set The function that
+func Set[T Global](slice []T) []T {
+	var newSlice []T
 	for _, val := range slice {
 		if !SliceContains(newSlice, val) {
 			newSlice = append(newSlice, val)
 		}
 	}
-	sort.Strings(newSlice)
+	return newSlice
+}
+
+// Sorted The function that
+func Sorted[T SubGlobal](slice []T) {
+	switch s := any(slice).(type) {
+	case []string:
+		sort.Strings(s)
+	case []int:
+		sort.Ints(s)
+	case []float64:
+		sort.Float64s(s)
+	}
+}
+
+// SortedSet The function that
+func SortedSet[T SubGlobal](slice []T) []T {
+	newSlice := Set(slice)
+	Sorted(newSlice)
 	return newSlice
 }
 

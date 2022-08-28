@@ -28,8 +28,8 @@ func firstHandler(dataset map[string][]string) ([]string, []string, []string, []
 			docY = append(docY, intent)
 		}
 	}
-	classes := utils.SortedWordSet(docY)
-	vocab = utils.SortedWordSet(words)
+	classes := utils.SortedSet(docY)
+	vocab = utils.SortedSet(words)
 	if utils.SliceContains(vocab, "") {
 		vocab = utils.SliceDeleteItem(vocab, "")
 	}
