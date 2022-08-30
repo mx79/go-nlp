@@ -9,8 +9,9 @@ import (
 )
 
 // CleanAndTokenize
-func CleanAndTokenize(s string) []string {
-	cleanedSent := clean.Tokenize(clean.PurgeText(s, true, true, true, true, true, true))
+var CleanAndTokenize = func(s string) []string {
+	purger := clean.NewPurger("fr", true, true, true, true, true, true, false)
+	cleanedSent := clean.Tokenize(purger.PurgeText(s))
 	return cleanedSent
 }
 

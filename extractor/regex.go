@@ -2,7 +2,6 @@ package extractor
 
 import (
 	"encoding/json"
-	"github.com/mx79/go-nlp/clean"
 	"github.com/mx79/go-nlp/utils"
 	"io"
 	"os"
@@ -34,15 +33,15 @@ func NewRegexExtractor(regexFilePath string) *RegexExtractor {
 	}
 }
 
-// GetEntity
+// GetEntity allows us to get back any entity and
+// their corresponding matching pattern from our RegexDict
 func (ext *RegexExtractor) GetEntity(s string) map[string]interface{} {
-	cleanedText := clean.RemovePunctuation(s)
 	res := make(map[string]interface{})
 	var patternList []string
 	for k, v := range ext.RegexDict {
 		for _, pattern := range v {
 			re := regexp.MustCompile(pattern)
-			if match := re.FindString(cleanedText); match != "" {
+			if match := re.FindString(s); match != "" {
 				patternList = append(patternList, match)
 				patternList = utils.SortedSet(patternList)
 				if len(patternList) > 1 {
@@ -53,6 +52,23 @@ func (ext *RegexExtractor) GetEntity(s string) map[string]interface{} {
 			}
 		}
 		patternList = []string{}
+	}
+	return res
+}
+
+// GetSentences allows us to get back any sentences
+// that match a pattern in the RegexDict
+func (ext *RegexExtractor) GetSentences(slice []string) []string {
+	var res []string
+	for _, v := range ext.RegexDict {
+		for _, pattern := range v {
+			for _, val := range slice {
+				re := regexp.MustCompile(pattern)
+				if match := re.FindString(val); match != "" {
+					res = append(res, val)
+				}
+			}
+		}
 	}
 	return res
 }
