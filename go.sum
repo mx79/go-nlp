@@ -1,17 +1,2 @@
-github.com/aaaton/golem/v4 v4.0.0/go.mod h1:OfK/S5v9Exsx1yO21WorREuIVV+Y5K2hygP0A9oJCCI=
-github.com/aaaton/golem/v4 v4.0.1 h1:jvnnTmzdfZC8cUGIo6obIcnmB3stTaf5Uw64OMx3C84=
-github.com/aaaton/golem/v4 v4.0.1/go.mod h1:OfK/S5v9Exsx1yO21WorREuIVV+Y5K2hygP0A9oJCCI=
-github.com/aaaton/golem/v4/dicts/de v1.0.1 h1:co0ZKLUy3Op17GLExNOa0F7atuP8o+434ayVjVQnz+U=
-github.com/aaaton/golem/v4/dicts/de v1.0.1/go.mod h1:rWm0JlyAuwoEX/gI4vnW8K1bJ8PSTNqPjZgUeM1zRpI=
-github.com/aaaton/golem/v4/dicts/en v1.0.1 h1:/BsOsh8JTgTkuevwM9axPnAi9CD4rK7TWHNdW/6V3Uo=
-github.com/aaaton/golem/v4/dicts/en v1.0.1/go.mod h1:1YKRrQNng+KbS+peA7sj3TIa8eqR6T2UqdJ+Tc9xeoA=
-github.com/aaaton/golem/v4/dicts/es v1.0.1 h1:9votDeLnNc4kv/nSG2sHfMjLZer9+TFToVEKR36gOzE=
-github.com/aaaton/golem/v4/dicts/es v1.0.1/go.mod h1:D9dOVwW9F/HoO2wIXJ4xJBnqO4KyAsLP4a/RYHN1wLk=
-github.com/aaaton/golem/v4/dicts/fr v1.0.1 h1:PTcIwu5rOXDLdkrSX06hEwtYTj54KSZLzF3u6jFcPjE=
-github.com/aaaton/golem/v4/dicts/fr v1.0.1/go.mod h1:Ek2g4prUAsQfNGd6b+B9Ju3XOShrMWhkDqtVd629meM=
-github.com/aaaton/golem/v4/dicts/it v1.0.1 h1:816pegmSgE2wJ5HdDCcIzXyZJ4IS+9y4fNAnbqw9/fE=
-github.com/aaaton/golem/v4/dicts/it v1.0.1/go.mod h1:JLDMH3SDnS4oDa6HyF1GxBxf/D+V34JIohn119bKr6U=
-github.com/aaaton/golem/v4/dicts/sv v1.0.1 h1:uFHj32XJgruf6Bz/vHBjXEpu8yfdgVfaKRyaPX6vCy4=
-github.com/aaaton/golem/v4/dicts/sv v1.0.1/go.mod h1:yiOECYRMBkm986RTAOZm5Ru/vdSxRwM60et8NNM1GsE=
 golang.org/x/text v0.3.7 h1:olpwvP2KacW1ZWvsR7uQhoyTYvKAupfQrRGBFM352Gk=
 golang.org/x/text v0.3.7/go.mod h1:u+2+/6zg+i71rQMx5EYifcz6MCKuco9NR6JIITiCfzQ=

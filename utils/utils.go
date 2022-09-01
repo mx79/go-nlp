@@ -56,6 +56,14 @@ func SliceDeleteItem[T Global](slice []T, value T) []T {
 	}
 }
 
+// MapContains The function that
+func MapContains[T Global](m map[T]T, value T) bool {
+	if _, ok := m[value]; ok {
+		return true
+	}
+	return false
+}
+
 // Set The function that
 func Set[T Global](slice []T) []T {
 	var newSlice []T
