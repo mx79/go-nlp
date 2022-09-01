@@ -8,7 +8,13 @@ project, this is a good place to list differentiating factors.
 
 ## Badges
 
-[![golang](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)](https://go.dev/)
+[![forthebadge made-with-go](http://ForTheBadge.com/images/badges/made-with-go.svg)](https://go.dev/)
+
+[![GoDoc reference example](https://img.shields.io/badge/godoc-reference-blue.svg)](https://godoc.org/github.com/mx79/go-nlp)
+[![GoReportCard example](https://goreportcard.com/badge/github.com/nanomsg/mangos)](https://goreportcard.com/report/github.com/mx79/go-nlp)
+
+[![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/mx79/go-nlp)](https://github.com/mx79/go-nlp)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/mx79/go-nlp/graphs/commit-activity)
 
 ## Visuals
 
