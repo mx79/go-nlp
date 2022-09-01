@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"os"
 	"sort"
 	"strings"
 )
@@ -92,18 +91,4 @@ func Check(e error) {
 	if e != nil {
 		panic(e)
 	}
-}
-
-// Write
-func Write(text string, file *os.File) {
-	if _, err := file.WriteString(text); err != nil {
-		panic(err)
-	}
-}
-
-// Read
-func Read(filename string) string {
-	data, err := os.ReadFile(filename)
-	Check(err)
-	return string(data)
 }
