@@ -27,8 +27,8 @@ func loadStemm(b []byte) base.Stemms {
 	return st
 }
 
-// NewStemmer
-func NewStemmer(lang base.Lang) *Stemmer {
+// New
+func New(lang base.Lang) *Stemmer {
 	return &Stemmer{
 		Lang: lang,
 		Dict: stemmDict(lang, stemms),

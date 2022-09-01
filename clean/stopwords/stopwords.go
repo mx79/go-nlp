@@ -27,8 +27,8 @@ func loadStop(b []byte) base.GlobalStopwords {
 	return s
 }
 
-// NewStopwords
-func NewStopwords(lang base.Lang) *Stopwords {
+// New
+func New(lang base.Lang) *Stopwords {
 	return &Stopwords{
 		Language: lang,
 		List:     stopwordList(lang, stopwords),

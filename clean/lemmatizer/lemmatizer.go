@@ -28,8 +28,8 @@ func loadLemm(b []byte) base.Lemms {
 	return l
 }
 
-// NewLemmatizer
-func NewLemmatizer(lang base.Lang) *Lemmatizer {
+// New
+func New(lang base.Lang) *Lemmatizer {
 	return &Lemmatizer{
 		Language: lang,
 		Dict:     lemmDict(lang, lemms),
