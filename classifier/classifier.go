@@ -3,6 +3,7 @@ package classifier
 import (
 	"encoding/json"
 	"github.com/mx79/go-nlp/nlu"
+	"github.com/mx79/go-nlp/utils"
 	"io"
 	"os"
 )
@@ -21,17 +22,12 @@ type IntentClassifier struct {
 func NewIntentClassifier(dataPath string) *IntentClassifier {
 	// Opening json file
 	jsonFile, err := os.Open(dataPath)
-	if err != nil {
-		panic(err)
-	}
+	utils.Check(err)
 	defer jsonFile.Close()
 	// Reading JSON file
 	byteValue, _ := io.ReadAll(jsonFile)
 	var results map[string][]string
-	err = json.Unmarshal(byteValue, &results)
-	if err != nil {
-		panic(err)
-	}
+	utils.Check(json.Unmarshal(byteValue, &results))
 	// x, y, classes, vocab
 	x, y, classes, vocab := nlu.BOW(results)
 	// FitTransform like a LabelEncoder and get an encoded stopwords in return
@@ -71,49 +67,20 @@ func NewIntentClassifier(dataPath string) *IntentClassifier {
 	}
 }
 
-// bowSimilarity
-func (cls *IntentClassifier) bowSimilarity(bow []float64) []float64 {
-	// Variables
-	var (
-		count           = 0
-		test            = 0
-		i               = 1
-		similarityCount int
-		res             []float64
-	)
-	// Loop checking similarity between bow to test and bows of the train Matrix
-	for _, b := range cls.MatrixX {
-		nb := cls.SentPerIntent[test]
-		for idx := range b {
-			// Similarity between bows
-			if b[idx] != 0 && bow[idx] != 0 {
-				count++
-			}
-		}
-		similarityCount += count
-		count = 0
-		if i == nb {
-			test++
-			// fmt.Printf("simi: %v, nb: %v\n", similarityCount, nb)
-			res = append(res, float64(similarityCount/nb))
-			similarityCount = 0
-			i = 0
-		}
-		i++
-	}
+/*
+// GetIntent
+func (cls *IntentClassifier) GetIntent(s string, boolSplitOnConj bool) map[string]float64 {
+	res := make(map[string]float64)
+	bow := nlu.SentenceBOW(s, cls.Vocab)
+	pred := cls.Encoder.Decode(bow)
+	r[pred] = 0.0 // TODO: Score
 	return res
 }
+*/
 
-// GetIntent
-func (cls *IntentClassifier) GetIntent(s string, boolSplitOnConj bool) string {
-	bow := nlu.SentenceBOW(s, cls.Vocab)
-	res, _ := idxOfMaxVal(cls.bowSimilarity(bow))
-	pred := cls.Encoder.DecodeRes(res)
-	return pred
-}
-
+/*
 // idxOfMaxVal
-func idxOfMaxVal(slice []float64) (int, float64) {
+func idxOfMaxVal(slice []float64) int {
 	var test = 0.0
 	var maxIndex int
 	for idx, val := range slice {
@@ -122,5 +89,6 @@ func idxOfMaxVal(slice []float64) (int, float64) {
 			maxIndex = idx
 		}
 	}
-	return maxIndex, test
+	return maxIndex
 }
+*/

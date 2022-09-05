@@ -6,6 +6,8 @@ Let people know what your project can do specifically. Provide context and add a
 unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your
 project, this is a good place to list differentiating factors.
 
+**Go-nlp** is a versatile natural language processing utility.
+
 ## Badges
 
 [![forthebadge made-with-go](http://ForTheBadge.com/images/badges/made-with-go.svg)](https://go.dev/)
@@ -18,16 +20,48 @@ project, this is a good place to list differentiating factors.
 
 ## Visuals
 
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see
-GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/mx79/go-nlp/clean"
+)
+
+func main() {
+	// Test sentence in english
+	sentence := "My name is Max and I will use this sentence as a test"
+
+	// Stopwords object
+	stopwords := clean.NewStopwords("en")
+	fmt.Println(stopwords.Stop(sentence))
+
+	// Lemmatizer object
+	lemmatizer := clean.NewLemmatizer("en")
+	fmt.Println(lemmatizer.Lemm(sentence))
+
+	// Stemmer object
+	stemmer := clean.NewStemmer("en")
+	fmt.Println(stemmer.Stem(sentence))
+
+	// Cleaning func
+	fmt.Println(clean.Lower(sentence))
+	fmt.Println(clean.Tokenize(sentence))
+	fmt.Println(clean.RemoveAccent(sentence))
+	fmt.Println(clean.RemovePunctuation(sentence))
+
+	// Purger object that is calling every cleaning package object and func
+	p := clean.NewTextPurger("en", true, false, true, true, true, true)
+	fmt.Println(p.Purge(sentence))
+}
+```
 
 ## Installation
 
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew.
-However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing
-specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a
-specific context like a particular programming language version or operating system or has dependencies that have to be
-installed manually, also add a Requirements subsection.
+To import the **go-nlp** package into your project, simply issue the following command: `go get github.com/mx79/go-nlp`
+
+To update the package from time to time, use one of the two commands: `go get -u github.com/mx79/go-nlp`
+or `go install github.com/mx79/go-nlp@latest`
 
 ## Usage
 

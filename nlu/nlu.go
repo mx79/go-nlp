@@ -8,10 +8,10 @@ import (
 	"strings"
 )
 
-// CleanAndTokenize
-var CleanAndTokenize = func(s string) []string {
-	purger := clean.NewPurger("fr", true, true, true, true, true, true, false)
-	cleanedSent := clean.Tokenize(purger.PurgeText(s))
+// cleanAndTokenize
+var cleanAndTokenize = func(d string) []string {
+	pur := clean.New("fr", true, false, true, true, true, true)
+	cleanedSent := clean.Tokenize(pur.Purge(d))
 	return cleanedSent
 }
 
@@ -21,7 +21,7 @@ func firstHandler(dataset map[string][]string) ([]string, []string, []string, []
 	var words, docX, docY, vocab []string
 	for intent, patternsList := range dataset {
 		for _, sent := range patternsList {
-			tokens := CleanAndTokenize(sent)
+			tokens := cleanAndTokenize(sent)
 			for _, token := range tokens {
 				words = append(words, token)
 			}
@@ -48,7 +48,7 @@ func BOW(dataset map[string][]string) ([][]float64, []string, []string, []string
 	)
 	for idx, doc := range docX {
 		var bow []float64
-		text := CleanAndTokenize(doc)
+		text := cleanAndTokenize(doc)
 		for _, word := range vocab {
 			if utils.SliceContains(text, word) {
 				count := float64(strings.Count(utils.ListToStr(text), word))
@@ -66,7 +66,7 @@ func BOW(dataset map[string][]string) ([][]float64, []string, []string, []string
 // SentenceBOW
 func SentenceBOW(sentence string, vocab []string) []float64 {
 	var bow []float64
-	text := CleanAndTokenize(sentence)
+	text := cleanAndTokenize(sentence)
 	for _, word := range vocab {
 		if utils.SliceContains(text, word) {
 			count := float64(strings.Count(utils.ListToStr(text), word))
@@ -141,6 +141,8 @@ func TfidfVectorizer(dataset map[string][]string) map[string]float64 {
 //	}
 //}
 
+const missingSchemeError = "Cannot decode a non encoded stopwords, use Encode() method first"
+
 // LabelEncoder
 type LabelEncoder struct {
 	EncodingScheme map[string]int
@@ -177,11 +179,21 @@ func (enc *LabelEncoder) Encode(stringSlice []string) []int {
 }
 
 // Decode
-//func (enc *LabelEncoder) Decode(encodedSlice []int) []string {
-//	var stringSlice []string
-//	TODO: complete this func
-//	return stringSlice
-//}
+func (enc *LabelEncoder) Decode(encodedSlice []int) []string {
+	var stringSlice []string
+	if enc.EncodingScheme != nil {
+		for _, val := range encodedSlice {
+			for k, v := range enc.EncodingScheme {
+				if v == val {
+					stringSlice = append(stringSlice, k)
+				}
+			}
+		}
+	} else {
+		panic(missingSchemeError)
+	}
+	return stringSlice
+}
 
 // DecodeRes
 func (enc *LabelEncoder) DecodeRes(res int) string {
@@ -194,7 +206,7 @@ func (enc *LabelEncoder) DecodeRes(res int) string {
 			}
 		}
 	} else {
-		panic("Cannot decode a non encoded stopwords, use Encode() method first")
+		panic(missingSchemeError)
 	}
 	return key
 }
