@@ -2,11 +2,11 @@
 
 ## Description
 
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be
-unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your
-project, this is a good place to list differentiating factors.
-
 **Go-nlp** is a versatile natural language processing utility.
+
+When I started Golang, I realised that the field of natural language processing was not very developed in this programming language.
+
+So I thought it might be interesting to create a utility package for Gophers.
 
 ## Badges
 
@@ -18,7 +18,14 @@ project, this is a good place to list differentiating factors.
 [![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/mx79/go-nlp)](https://github.com/mx79/go-nlp)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/mx79/go-nlp/graphs/commit-activity)
 
-## Visuals
+## Installation
+
+To import the **go-nlp** package into your project, simply issue the following command: `go get github.com/mx79/go-nlp`
+
+To update the package from time to time, use one of the two commands: `go get -u github.com/mx79/go-nlp`
+or `go install github.com/mx79/go-nlp@latest`
+
+## Usage
 
 ```go
 package main
@@ -35,61 +42,52 @@ func main() {
 	// Stopwords object
 	stopwords := clean.NewStopwords("en")
 	fmt.Println(stopwords.Stop(sentence))
+	// My name Max, I will use sentence test. ?!
 
-	// Lemmatizer object
+    // Lemmatizer object
 	lemmatizer := clean.NewLemmatizer("en")
 	fmt.Println(lemmatizer.Lemm(sentence))
+	// My name be Max, I will use this sentence as a test. ?!
 
 	// Stemmer object
 	stemmer := clean.NewStemmer("en")
 	fmt.Println(stemmer.Stem(sentence))
+	// My name is Max, I will use this sentenc as a test. ?!
+	
 
 	// Cleaning func
 	fmt.Println(clean.Lower(sentence))
 	fmt.Println(clean.Tokenize(sentence))
 	fmt.Println(clean.RemoveAccent(sentence))
 	fmt.Println(clean.RemovePunctuation(sentence))
+	// my name is max, i will use this sentence as a test. ?!
+	// [My name is Max, I will use this sentence as a test. ?!]
+	// My name is Max, I will use this sentence as a test. ?!
+	// My name is Max I will use this sentence as a test
 
 	// Purger object that is calling every cleaning package object and func
 	p := clean.NewTextPurger("en", true, false, true, true, true, true)
 	fmt.Println(p.Purge(sentence))
+	// my name max i will use sentenc test
 }
 ```
 
-## Installation
-
-To import the **go-nlp** package into your project, simply issue the following command: `go get github.com/mx79/go-nlp`
-
-To update the package from time to time, use one of the two commands: `go get -u github.com/mx79/go-nlp`
-or `go install github.com/mx79/go-nlp@latest`
-
-## Usage
-
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of
-usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably
-include in the README.
-
 ## Support
 
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address,
-etc.
+This repository is maintained, and you can create a ticket directly on it for any bug or suggestion for improvement.
 
 ## Roadmap
 
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+In the future, I would like to integrate into this package an intention detection object based on the **RandomForest** algorithm.
+
+Ideally, I would like to integrate as many languages as possible with **stopwords**, **lemmatization** and **stemming** data.
 
 ## Contributing
 
-State if you are open to contributions and what your requirements are for accepting them.
+This project is opened to contribution.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started.
-Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps
-explicit. These instructions could also be useful to your future self.
+## Acknowledgment
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce
-the likelihood that the changes inadvertently break something. Having instructions for running tests is especially
-helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-
-Show your appreciation to those who have contributed to the project.
+I would like to thank ranks.nl for providing me with stopwords for over 30 countries. 
+I also thank the contributors to the data in the famous Python NLTK package. 
+For this package, I got the stemming data of about ten languages. 
