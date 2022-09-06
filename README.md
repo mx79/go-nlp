@@ -6,7 +6,7 @@
 
 When I started Golang, I realised that the field of natural language processing was not very developed in this programming language.
 
-So I thought it might be interesting to create a utility package for Gophers.
+So I thought it might be interesting to create a utility NLP package for the Gophers.
 
 ## Badges
 
@@ -84,7 +84,7 @@ Ideally, I would like to integrate as many languages as possible with **stopword
 
 ## Contributing
 
-This project is opened to contribution.
+This project is open to contributions.
 
 ## Acknowledgment
 
