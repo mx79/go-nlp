@@ -2,7 +2,6 @@ package classifier
 
 import (
 	"encoding/json"
-	"github.com/mx79/go-nlp/nlu"
 	"github.com/mx79/go-nlp/utils"
 	"io"
 	"os"
@@ -13,7 +12,7 @@ type IntentClassifier struct {
 	SentPerIntent []int
 	Vocab         []string
 	Classes       []string
-	Encoder       *nlu.LabelEncoder
+	Encoder       *LabelEncoder
 	MatrixX       [][]float64
 	MatrixY       []int
 }
@@ -29,9 +28,9 @@ func NewIntentClassifier(dataPath string) *IntentClassifier {
 	var results map[string][]string
 	utils.Check(json.Unmarshal(byteValue, &results))
 	// x, y, classes, vocab
-	x, y, classes, vocab := nlu.BOW(results)
+	x, y, classes, vocab := BOW(results)
 	// FitTransform like a LabelEncoder and get an encoded stopwords in return
-	encoder := nlu.NewlabelEncoder()
+	encoder := NewlabelEncoder()
 	encodedY := encoder.Encode(y)
 	// Creating slice to see how many sentence there is per intent
 	//var sentPerIntent []int

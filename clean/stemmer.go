@@ -3,7 +3,7 @@ package clean
 import (
 	_ "embed"
 	"encoding/json"
-	"github.com/mx79/go-nlp/clean/base"
+	"github.com/mx79/go-nlp/base"
 	"github.com/mx79/go-nlp/utils"
 )
 
@@ -22,14 +22,14 @@ type Stemmer struct {
 	Dict base.StemmDict
 }
 
-// loadStemm
+// loadStemm loads the map that contains the stemms in many languages
 func loadStemm(b []byte) base.Stemms {
 	var st base.Stemms
 	utils.Check(json.Unmarshal(b, &st))
 	return st
 }
 
-// NewStemmer
+// NewStemmer instantiates a new Stemmer object
 func NewStemmer(lang base.Lang) *Stemmer {
 	return &Stemmer{
 		Lang: lang,
@@ -37,7 +37,7 @@ func NewStemmer(lang base.Lang) *Stemmer {
 	}
 }
 
-// stemmDict
+// stemmDict retrieves a map of stemms for a language
 func stemmDict(lang base.Lang, st base.Stemms) map[string]string {
 	if _, ok := st[lang]; !ok {
 		panic(base.LangError)
@@ -45,7 +45,7 @@ func stemmDict(lang base.Lang, st base.Stemms) map[string]string {
 	return st[lang]
 }
 
-// Stem
+// Stem is the method that is stemming every word in the input sentence
 func (stm *Stemmer) Stem(s string) string {
 	var sent string
 	for _, word := range Tokenize(s) {

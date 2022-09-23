@@ -1,4 +1,4 @@
-package nlu
+package classifier
 
 import (
 	"github.com/mx79/go-nlp/clean"
@@ -10,7 +10,7 @@ import (
 
 // cleanAndTokenize
 var cleanAndTokenize = func(d string) []string {
-	pur := clean.New("fr", true, false, true, true, true, true)
+	pur := clean.NewTextPurger("fr", true, false, true, true, true, true)
 	cleanedSent := clean.Tokenize(pur.Purge(d))
 	return cleanedSent
 }

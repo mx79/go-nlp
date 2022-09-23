@@ -1,12 +1,14 @@
 package clean
 
 import (
-	"github.com/mx79/go-nlp/clean/base"
+	"github.com/mx79/go-nlp/base"
 )
 
+// lemmStemmError is an error dropped when you try to purge a text with both Lemmatizing and Stemming options enabled
 const lemmStemmError = "You cannot use lemmatizing and stemming on the same text, this will leeds to strange results"
 
-// TextPurger object
+// TextPurger object with boolean attributes to specify
+// which clean function we want to use or not
 type TextPurger struct {
 	Language    base.Lang
 	Stopwords   *Stopwords
@@ -20,7 +22,7 @@ type TextPurger struct {
 	Lowercase   bool
 }
 
-// NewTextPurger
+// NewTextPurger instantiates a new TextPurger object
 func NewTextPurger(lang base.Lang, noStopword bool, lemmatizing bool, stemming bool, noPunct bool, noAccent bool, lowercase bool) *TextPurger {
 	if lemmatizing && stemming {
 		panic(lemmStemmError)

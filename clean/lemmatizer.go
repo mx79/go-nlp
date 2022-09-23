@@ -3,7 +3,7 @@ package clean
 import (
 	_ "embed"
 	"encoding/json"
-	"github.com/mx79/go-nlp/clean/base"
+	"github.com/mx79/go-nlp/base"
 	"github.com/mx79/go-nlp/utils"
 	"strings"
 )
@@ -25,14 +25,14 @@ type Lemmatizer struct {
 	Dict     base.LemmDict
 }
 
-// loadLemm
+// loadLemm loads the map that contains the lemms in many languages
 func loadLemm(b []byte) base.Lemms {
 	var l base.Lemms
 	utils.Check(json.Unmarshal(b, &l))
 	return l
 }
 
-// NewLemmatizer
+// NewLemmatizer instantiates a new Lemmatizer object
 func NewLemmatizer(lang base.Lang) *Lemmatizer {
 	return &Lemmatizer{
 		Language: lang,
@@ -40,7 +40,7 @@ func NewLemmatizer(lang base.Lang) *Lemmatizer {
 	}
 }
 
-// lemmDict
+// lemmDict retrieves a map of lemms for a language
 func lemmDict(lang base.Lang, l base.Lemms) map[string]string {
 	if _, ok := l[lang]; !ok {
 		panic(base.LangError)
@@ -56,7 +56,7 @@ func slash(word string) string {
 	return word
 }
 
-// Lemm
+// Lemm is the method that is lemmatizing every word in the input sentence
 func (stm *Lemmatizer) Lemm(s string) string {
 	var sent string
 	for _, word := range Tokenize(s) {

@@ -3,7 +3,7 @@ package clean
 import (
 	_ "embed"
 	"encoding/json"
-	"github.com/mx79/go-nlp/clean/base"
+	"github.com/mx79/go-nlp/base"
 	"github.com/mx79/go-nlp/utils"
 )
 
