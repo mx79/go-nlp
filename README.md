@@ -4,7 +4,8 @@
 
 **Go-nlp** is a versatile natural language processing utility.
 
-When I started Golang, I realised that the field of natural language processing was not very developed in this programming language.
+When I started Golang, I realised that the field of natural language processing was not very developed in this
+programming language.
 
 So I thought it might be interesting to create a utility NLP package for the Gophers.
 
@@ -37,36 +38,30 @@ import (
 
 func main() {
 	// Test sentence in english
-	sentence := "My name is Max and I will use this sentence as a test"
+	sentence := "My name is Max, I will use this sentence as a test. ?!"
 
 	// Stopwords object
 	stopwords := clean.NewStopwords("en")
 	fmt.Println(stopwords.Stop(sentence))
 	// My name Max, I will use sentence test. ?!
 
-    // Lemmatizer object
-	lemmatizer := clean.NewLemmatizer("en")
-	fmt.Println(lemmatizer.Lemm(sentence))
-	// My name be Max, I will use this sentence as a test. ?!
-
 	// Stemmer object
 	stemmer := clean.NewStemmer("en")
 	fmt.Println(stemmer.Stem(sentence))
 	// My name is Max, I will use this sentenc as a test. ?!
-	
 
 	// Cleaning func
 	fmt.Println(clean.Lower(sentence))
-	fmt.Println(clean.Tokenize(sentence))
+	fmt.Println(clean.Tokenize(sentence, true))
 	fmt.Println(clean.RemoveAccent(sentence))
 	fmt.Println(clean.RemovePunctuation(sentence))
 	// my name is max, i will use this sentence as a test. ?!
-	// [My name is Max, I will use this sentence as a test. ?!]
+	// [My name is Max , I will use this sentence as a test . ? !]
 	// My name is Max, I will use this sentence as a test. ?!
 	// My name is Max I will use this sentence as a test
 
 	// Purger object that is calling every cleaning package object and func
-	p := clean.NewTextPurger("en", true, false, true, true, true, true)
+	p := clean.NewTextPurger("en", true, true, true, true, true)
 	fmt.Println(p.Purge(sentence))
 	// my name max i will use sentenc test
 }
@@ -78,9 +73,11 @@ This repository is maintained, and you can create a ticket directly on it for an
 
 ## Roadmap
 
-In the future, I would like to integrate into this package an intention detection object based on the **RandomForest** algorithm.
+In the future, I would like to integrate into this package an intention detection object based on the **RandomForest**
+algorithm.
 
-Ideally, I would like to integrate as many languages as possible with **stopwords**, **lemmatization** and **stemming** data.
+Ideally, I would like to integrate as many languages as possible with **stopwords**, **lemmatization** and **stemming**
+data.
 
 ## Contributing
 
@@ -88,6 +85,6 @@ This project is open to contributions.
 
 ## Acknowledgment
 
-I would like to thank ranks.nl for providing me with stopwords for over 30 countries. 
-I also thank the contributors to the data in the famous Python NLTK package. 
+I would like to thank ranks.nl for providing me with stopwords for over 30 countries.
+I also thank the contributors to the data in the famous Python NLTK package.
 For this package, I got the stemming data of about ten languages. 

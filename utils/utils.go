@@ -33,12 +33,9 @@ func SliceContains[T Global](slice []T, value T) bool {
 	return false
 }
 
-// SliceDeleteItem deletes the selected element in a slice
-// It returns the slice without the element, but keep in mind
-// that for the moment this function must be used with a set of values
-// because it is only deleting the first match with the input element
-// If there are many same elements in the slice, it will only delete one.
-func SliceDeleteItem[T Global](slice []T, value T) []T {
+// sliceDeleteOneItem deletes the selected element in a slice
+// It returns the slice without the indicated element
+func sliceDeleteOneItem[T Global](slice []T, value T) []T {
 	idxToDel := 0
 	for _, item := range slice {
 		if item == value {
@@ -52,6 +49,28 @@ func SliceDeleteItem[T Global](slice []T, value T) []T {
 		newSlice := append(slice[:idxToDel], slice[(idxToDel+1):]...)
 		return newSlice
 	}
+}
+
+// SliceDeleteItem deletes the selected element recursively
+// It uses SliceDeleteOneItem until the item is no longer
+// present in our slice
+func SliceDeleteItem[T Global](slice []T, value T) []T {
+	var count int
+	for _, t := range slice {
+		if t == value {
+			count++
+		}
+	}
+	if count != 0 {
+		for {
+			slice = sliceDeleteOneItem(slice, value)
+			count--
+			if count == 0 {
+				break
+			}
+		}
+	}
+	return slice
 }
 
 // MapContains checks if a map contains an element

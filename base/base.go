@@ -11,10 +11,6 @@ type (
 	Stemms    map[Lang]StemmDict // every lang
 	StemmDict map[string]string  // local lang
 
-	// Lemms and LemmDict are types required to create a Lemmatizer object
-	Lemms    map[Lang]LemmDict // every lang
-	LemmDict map[string]string // local lang
-
 	// GlobalStopwords and StopList are the types required to create a Stopwords object
 	GlobalStopwords map[Lang]StopList // every lang
 	StopList        []string          // local lang

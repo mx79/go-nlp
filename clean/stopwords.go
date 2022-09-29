@@ -47,7 +47,7 @@ func stopwordList(lang base.Lang, s base.GlobalStopwords) []string {
 // Stop is the method that removes the stopwords contained in the input sentence
 func (stp *Stopwords) Stop(s string) string {
 	var sent string
-	for _, word := range Tokenize(s) {
+	for _, word := range Tokenize(s, false) {
 		if !utils.SliceContains(stp.List, word) {
 			sent += word + " "
 		}
