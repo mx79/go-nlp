@@ -6,6 +6,7 @@ import (
 	"github.com/mx79/go-nlp/base"
 	"github.com/mx79/go-nlp/utils"
 	"log"
+	"strings"
 )
 
 //go:embed ressources/stemmer.json
@@ -47,14 +48,24 @@ func stemmDict(lang base.Lang, st base.Stemms) map[string]string {
 }
 
 // Stem is the method that is stemming every word in the input sentence
+//func (stm *Stemmer) Stem(s string) string {
+//	var sent string
+//	for _, word := range Tokenize(s, false) {
+//		if !utils.MapContains(stm.Dict, word) {
+//			sent += word + " "
+//		} else {
+//			sent += stm.Dict[word] + " "
+//		}
+//	}
+//	return sent
+//}
+
+// Stem is the method that is stemming every word in the input sentence
 func (stm *Stemmer) Stem(s string) string {
-	var sent string
 	for _, word := range Tokenize(s, false) {
-		if !utils.MapContains(stm.Dict, word) {
-			sent += word + " "
-		} else {
-			sent += stm.Dict[word] + " "
+		if utils.MapContains(stm.Dict, word) {
+			s = strings.Replace(s, word, stm.Dict[word], -1)
 		}
 	}
-	return sent
+	return s
 }
