@@ -98,8 +98,7 @@ func (ext *LookupExtractor) GetEntity(s string) map[string]interface{} {
 
 // GetSentences allows us to get back any sentences
 // that match a pattern from our LookupExtractor dict
-func (ext *LookupExtractor) GetSentences(slice []string) []string {
-	var res []string
+func (ext *LookupExtractor) GetSentences(slice []string) (res []string) {
 	for _, v := range ext.LookupTable {
 		for _, pattern := range v {
 			for _, val := range slice {
@@ -110,7 +109,7 @@ func (ext *LookupExtractor) GetSentences(slice []string) []string {
 			}
 		}
 	}
-	return res
+	return
 }
 
 // adjustPattern adjusts the pattern entered with
