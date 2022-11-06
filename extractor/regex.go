@@ -1,76 +1,63 @@
 package extractor
 
 import (
-	_ "embed"
-	"encoding/json"
-	"github.com/mx79/go-nlp/utils"
-	"io"
-	"os"
+	"log"
 	"regexp"
 )
 
-// Extractor
-type Extractor interface {
-	GetEntity()
-	GetSentences()
+type RegexExtractor struct {
+	EntityName string
+	Pattern    *regexp.Regexp
+	Flags      map[RegexFlag]bool
 }
-
-// RegexExtractor object
-// In information retrieval, sometime we want to extract entities
-// from a sentence or a text, that is where this object can be useful
-// by implementing regular expression extraction from a map
-type RegexExtractor map[string][]string
 
 // NewRegexExtractor instantiates a new RegexExtractor object
-func NewRegexExtractor(regexFilePath string) RegexExtractor {
-	// Opening the provided json
-	jsonFile, err := os.Open(regexFilePath)
-	utils.Check(err)
-	defer jsonFile.Close()
-	// Reading JSON file
-	byteValue, _ := io.ReadAll(jsonFile)
-	var dict map[string][]string
-	utils.Check(json.Unmarshal(byteValue, &dict))
-	// Return an instance of RegexExtractor
-	return dict
-}
-
-// GetEntity allows us to get back any entity and
-// their corresponding matching pattern from our RegexExtractor dict
-func (ext RegexExtractor) GetEntity(s string) map[string]interface{} {
-	res := make(map[string]interface{})
-	var patternList []string
-	for k, v := range ext {
-		for _, pattern := range v {
-			re := regexp.MustCompile("(?i)" + pattern)
-			if match := re.FindString(s); match != "" {
-				patternList = append(patternList, match)
-				patternList = utils.SortedSet(patternList)
-				if len(patternList) > 1 {
-					res[k] = patternList
-				} else {
-					res[k] = match
-				}
-			}
-		}
-		patternList = []string{}
+// In information retrieval, sometime we want to extract entities
+// from a sentence or a text, that is where this object can be useful
+// by implementing regular expression extraction from a pattern
+func NewRegexExtractor(entityName string, pattern string, flags ...RegexFlag) *RegexExtractor {
+	// Implementing Flags
+	var flagMap = map[RegexFlag]bool{
+		IGNORECASE:   false,
+		MULTILINE:    false,
+		MATCHNEWLINE: false,
+		UNGREEDY:     false,
 	}
-	return res
+	for _, f := range flags {
+		if _, b := flagMap[f]; b {
+			flagMap[f] = true
+		} else {
+			log.Fatalf("Unidentified flag named: %v\n"+
+				"You should choose one from the go-nlp lib constants, ex: IGNORECASE", f)
+		}
+	}
+	re := adjustPattern(pattern, flagMap)
+
+	return &RegexExtractor{
+		EntityName: entityName,
+		Pattern:    re,
+		Flags:      flagMap,
+	}
 }
 
-// GetSentences allows us to get back any sentences
-// that match a pattern from our RegexExtractor dict
-func (ext RegexExtractor) GetSentences(slice []string) []string {
-	var res []string
-	for _, v := range ext {
-		for _, pattern := range v {
-			for _, val := range slice {
-				re := regexp.MustCompile(pattern)
-				if match := re.FindString(val); match != "" {
-					res = append(res, val)
-				}
-			}
+// GetEntity extracts any match with the fixed pattern and flags
+// It returns a map with one entry , the entity name and the slice of match
+func (ext *RegexExtractor) GetEntity(s string) map[string][]string {
+	res := make(map[string][]string)
+	for _, match := range ext.Pattern.FindAllString(s, -1) {
+		if match != "" {
+			res[ext.EntityName] = append(res[ext.EntityName], match)
 		}
 	}
 	return res
+}
+
+// GetSentences allows us to get back any sentences that contains a match with our pattern
+func (ext *RegexExtractor) GetSentences(slice []string) (res []string) {
+	for _, val := range slice {
+		if match := ext.Pattern.FindString(val); match != "" {
+			res = append(res, val)
+		}
+	}
+	return
 }
