@@ -13,10 +13,10 @@ import (
 // Flags const, can be imported in the code and used
 // to declare faster a LookupExtractor or RegexExtractor
 const (
-	IGNORECASE   = "IGNORECASE"
-	MULTILINE    = "MULTILINE"
-	MATCHNEWLINE = "MATCHNEWLINE"
-	UNGREEDY     = "UNGREEDY"
+	IGNORECASE   RegexFlag = "IGNORECASE"
+	MULTILINE    RegexFlag = "MULTILINE"
+	MATCHNEWLINE RegexFlag = "MATCHNEWLINE"
+	UNGREEDY     RegexFlag = "UNGREEDY"
 )
 
 // Extractor interface implements GetEntity and GetSentences methods
@@ -56,7 +56,7 @@ func NewLookupExtractor(regexFilePath string, flags ...RegexFlag) *LookupExtract
 		UNGREEDY:     false,
 	}
 	for _, f := range flags {
-		if b := flagMap[f]; b {
+		if _, b := flagMap[f]; b {
 			flagMap[f] = true
 		} else {
 			log.Fatalf("Unidentified flag named: %v\n"+
