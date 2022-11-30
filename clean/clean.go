@@ -1,10 +1,11 @@
 package clean
 
 import (
-	"github.com/mx79/go-nlp/utils"
+	"github.com/mx79/go-nlp/go-utils"
 	"golang.org/x/text/runes"
 	"golang.org/x/text/transform"
 	"golang.org/x/text/unicode/norm"
+	"log"
 	"strings"
 	"unicode"
 )
@@ -24,7 +25,9 @@ func RemovePunctuation(s string) string {
 func RemoveAccent(s string) string {
 	t := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
 	output, _, err := transform.String(t, s)
-	utils.Check(err)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return output
 }
 
@@ -84,5 +87,5 @@ func Tokenize(sent string, withPunct bool) []string {
 			}
 		}
 	}
-	return utils.SliceDeleteItem(tokens, "")
+	return go_utils.SliceDeleteItem(tokens, "")
 }

@@ -3,8 +3,7 @@ package clean
 import (
 	_ "embed"
 	"encoding/json"
-	"github.com/mx79/go-nlp/base"
-	"github.com/mx79/go-nlp/utils"
+	"github.com/mx79/go-nlp/go-utils"
 	"log"
 	"strings"
 )
@@ -20,19 +19,22 @@ var stemms = loadStemm(stemmBytes)
 // The root of a word is the part of the word that remains after removing its prefix and suffix,
 // namely its stem.
 type Stemmer struct {
-	Lang base.Lang
-	Dict base.StemmDict
+	Lang Lang
+	Dict StemmDict
 }
 
 // loadStemm loads the map that contains the stemms in many languages
-func loadStemm(b []byte) base.Stemms {
-	var st base.Stemms
-	utils.Check(json.Unmarshal(b, &st))
+func loadStemm(b []byte) Stemms {
+	var st Stemms
+	err := json.Unmarshal(b, &st)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return st
 }
 
 // NewStemmer instantiates a new Stemmer object
-func NewStemmer(lang base.Lang) *Stemmer {
+func NewStemmer(lang Lang) *Stemmer {
 	return &Stemmer{
 		Lang: lang,
 		Dict: stemmDict(lang, stemms),
@@ -40,9 +42,9 @@ func NewStemmer(lang base.Lang) *Stemmer {
 }
 
 // stemmDict retrieves a map of stemms for a language
-func stemmDict(lang base.Lang, st base.Stemms) map[string]string {
+func stemmDict(lang Lang, st Stemms) map[string]string {
 	if _, ok := st[lang]; !ok {
-		log.Fatal(base.LangError)
+		log.Fatal(LangError)
 	}
 	return st[lang]
 }
@@ -63,7 +65,7 @@ func stemmDict(lang base.Lang, st base.Stemms) map[string]string {
 // Stem is the method that is stemming every word in the input sentence
 func (stm *Stemmer) Stem(s string) string {
 	for _, word := range Tokenize(s, false) {
-		if utils.MapContains(stm.Dict, word) {
+		if go_utils.MapContains(stm.Dict, word) {
 			s = strings.Replace(s, word, stm.Dict[word], -1)
 		}
 	}

@@ -5,24 +5,23 @@ import (
 	"regexp"
 )
 
+// RegexExtractor object:
+//
+// In information retrieval, sometime we want to extract entities
+// from a sentence or a text, that is where this object can be useful
+// by implementing regular expression extraction from a pattern.
 type RegexExtractor struct {
 	EntityName string
 	Pattern    *regexp.Regexp
 	Flags      map[RegexFlag]bool
 }
 
-// NewRegexExtractor instantiates a new RegexExtractor object
+// NewRegexExtractor instantiates a new RegexExtractor object.
+//
 // In information retrieval, sometime we want to extract entities
 // from a sentence or a text, that is where this object can be useful
-// by implementing regular expression extraction from a pattern
+// by implementing regular expression extraction from a pattern.
 func NewRegexExtractor(entityName string, pattern string, flags ...RegexFlag) *RegexExtractor {
-	// Implementing Flags
-	var flagMap = map[RegexFlag]bool{
-		IGNORECASE:   false,
-		MULTILINE:    false,
-		MATCHNEWLINE: false,
-		UNGREEDY:     false,
-	}
 	for _, f := range flags {
 		if _, b := flagMap[f]; b {
 			flagMap[f] = true
@@ -40,8 +39,9 @@ func NewRegexExtractor(entityName string, pattern string, flags ...RegexFlag) *R
 	}
 }
 
-// GetEntity extracts any match with the fixed pattern and flags
-// It returns a map with one entry , the entity name and the slice of match
+// GetEntity extracts any match with the fixed pattern and flags.
+//
+// It returns a map with one entry , the entity name and the slice of match.
 func (ext *RegexExtractor) GetEntity(s string) map[string][]string {
 	res := make(map[string][]string)
 	for _, match := range ext.Pattern.FindAllString(s, -1) {
@@ -52,7 +52,7 @@ func (ext *RegexExtractor) GetEntity(s string) map[string][]string {
 	return res
 }
 
-// GetSentences allows us to get back any sentences that contains a match with our pattern
+// GetSentences allows us to get back any sentences that contains a match with our pattern.
 func (ext *RegexExtractor) GetSentences(slice []string) (res []string) {
 	for _, val := range slice {
 		if match := ext.Pattern.FindString(val); match != "" {

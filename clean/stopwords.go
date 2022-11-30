@@ -3,8 +3,8 @@ package clean
 import (
 	_ "embed"
 	"encoding/json"
-	"github.com/mx79/go-nlp/base"
-	"github.com/mx79/go-nlp/utils"
+	"github.com/mx79/go-nlp/go-utils"
+	"log"
 )
 
 //go:embed ressources/stopwords.json
@@ -17,19 +17,22 @@ var stopwords = loadStop(stopBytes)
 // In information retrieval, a stopword is a word that is so common
 // that there is no need to index it or use it in a search.
 type Stopwords struct {
-	Language base.Lang
+	Language Lang
 	List     []string
 }
 
 // loadStop loads the map that contains the stopwords in many languages
-func loadStop(b []byte) base.GlobalStopwords {
-	var s base.GlobalStopwords
-	utils.Check(json.Unmarshal(b, &s))
+func loadStop(b []byte) GlobalStopwords {
+	var s GlobalStopwords
+	err := json.Unmarshal(b, &s)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return s
 }
 
 // NewStopwords instantiates a new Stopwords object
-func NewStopwords(lang base.Lang) *Stopwords {
+func NewStopwords(lang Lang) *Stopwords {
 	return &Stopwords{
 		Language: lang,
 		List:     stopwordList(lang, stopwords),
@@ -37,9 +40,9 @@ func NewStopwords(lang base.Lang) *Stopwords {
 }
 
 // stopwordList retrieves a list of stopwords for a language
-func stopwordList(lang base.Lang, s base.GlobalStopwords) []string {
+func stopwordList(lang Lang, s GlobalStopwords) []string {
 	if _, ok := s[lang]; !ok {
-		panic(base.LangError)
+		panic(LangError)
 	}
 	return s[lang]
 }
@@ -48,7 +51,7 @@ func stopwordList(lang base.Lang, s base.GlobalStopwords) []string {
 func (stp *Stopwords) Stop(s string) string {
 	var sent string
 	for _, word := range Tokenize(s, false) {
-		if !utils.SliceContains(stp.List, word) {
+		if !go_utils.SliceContains(stp.List, word) {
 			sent += word + " "
 		}
 	}

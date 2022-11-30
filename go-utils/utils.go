@@ -1,4 +1,4 @@
-package utils
+package go_utils
 
 import (
 	"sort"
@@ -108,18 +108,11 @@ func Sorted[T SubGlobal](slice []T) {
 }
 
 // SortedSet uses both Set and Sorted
-// functions as explained in its name
-// But it only works for string, int and float64 types
+// functions as explained in its name.
+//
+// But it only works for string, int and float64 types.
 func SortedSet[T SubGlobal](slice []T) []T {
 	newSlice := Set(slice)
 	Sorted(newSlice)
 	return newSlice
-}
-
-// Check is a simple function to remove the redundant
-// use of the Golang error detection system
-func Check(e error) {
-	if e != nil {
-		panic(e)
-	}
 }

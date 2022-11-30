@@ -1,13 +1,9 @@
 package clean
 
-import (
-	"github.com/mx79/go-nlp/base"
-)
-
 // TextPurger object with boolean attributes to specify
 // which clean function we want to use or not
 type TextPurger struct {
-	Language    base.Lang
+	Language    Lang
 	Stopwords   *Stopwords
 	Stemmer     *Stemmer
 	NoStopword  bool
@@ -19,7 +15,7 @@ type TextPurger struct {
 }
 
 // NewTextPurger instantiates a new TextPurger object
-func NewTextPurger(lang base.Lang, noStopword bool, stemming bool, noPunct bool, noAccent bool, lowercase bool) *TextPurger {
+func NewTextPurger(lang Lang, noStopword bool, stemming bool, noPunct bool, noAccent bool, lowercase bool) *TextPurger {
 	return &TextPurger{
 		Language:   lang,
 		Stopwords:  NewStopwords(lang),
