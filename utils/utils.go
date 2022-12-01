@@ -34,6 +34,7 @@ func SliceContains[T Global](slice []T, value T) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -42,18 +43,21 @@ func SliceContains[T Global](slice []T, value T) bool {
 // It returns the slice without the indicated element, removed only one time.
 func sliceDeleteOneItem[T Global](slice []T, value T) []T {
 	idxToDel := 0
+
 	for _, item := range slice {
 		if item == value {
 			break
 		}
 		idxToDel++
 	}
+
 	if idxToDel >= len(slice) {
 		return slice
-	} else {
-		newSlice := append(slice[:idxToDel], slice[(idxToDel+1):]...)
-		return newSlice
 	}
+
+	newSlice := append(slice[:idxToDel], slice[(idxToDel+1):]...)
+
+	return newSlice
 }
 
 // SliceDeleteItem deletes the selected element recursively.
@@ -62,11 +66,13 @@ func sliceDeleteOneItem[T Global](slice []T, value T) []T {
 // present in our slice
 func SliceDeleteItem[T Global](slice []T, value T) []T {
 	var count int
+
 	for _, t := range slice {
 		if t == value {
 			count++
 		}
 	}
+
 	if count != 0 {
 		for {
 			slice = sliceDeleteOneItem(slice, value)
@@ -76,6 +82,7 @@ func SliceDeleteItem[T Global](slice []T, value T) []T {
 			}
 		}
 	}
+
 	return slice
 }
 
@@ -86,6 +93,7 @@ func MapContains[T Global](m map[T]T, value T) bool {
 	if _, ok := m[value]; ok {
 		return true
 	}
+
 	return false
 }
 
@@ -97,6 +105,7 @@ func Set[T Global](slice []T) (newSlice []T) {
 			newSlice = append(newSlice, val)
 		}
 	}
+
 	return
 }
 
@@ -121,5 +130,6 @@ func Sorted[T SubGlobal](slice []T) {
 func SortedSet[T SubGlobal](slice []T) (newSlice []T) {
 	newSlice = Set(slice)
 	Sorted(newSlice)
+
 	return
 }
