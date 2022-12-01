@@ -1,7 +1,9 @@
 package clean
 
+import "strings"
+
 // TextPurger object with boolean attributes to specify
-// which clean function we want to use or not
+// which clean function we want to use or not.
 type TextPurger struct {
 	Language    Lang
 	Stopwords   *Stopwords
@@ -29,7 +31,8 @@ func NewTextPurger(lang Lang, noStopword bool, stemming bool, noPunct bool, noAc
 }
 
 // Purge allows to clean a given text in depth
-// by applying several layers of treatment
+// by applying several layers of treatment.
+//
 // It returns the sentence based on boolean values
 func (p *TextPurger) Purge(s string) string {
 	if p.NoStopword {
@@ -45,7 +48,8 @@ func (p *TextPurger) Purge(s string) string {
 		s = RemoveAccent(s)
 	}
 	if p.Lowercase {
-		s = Lower(s)
+		s = strings.ToLower(s)
 	}
+
 	return s
 }

@@ -11,9 +11,8 @@ import (
 // from a sentence or a text, that is where this object can be useful
 // by implementing regular expression extraction from a pattern.
 type RegexExtractor struct {
-	EntityName string
-	Pattern    *regexp.Regexp
-	Flags      map[RegexFlag]bool
+	Pattern *regexp.Regexp
+	Flags   map[RegexFlag]bool
 }
 
 // NewRegexExtractor instantiates a new RegexExtractor object.
@@ -21,7 +20,7 @@ type RegexExtractor struct {
 // In information retrieval, sometime we want to extract entities
 // from a sentence or a text, that is where this object can be useful
 // by implementing regular expression extraction from a pattern.
-func NewRegexExtractor(entityName string, pattern string, flags ...RegexFlag) *RegexExtractor {
+func NewRegexExtractor(pattern string, flags ...RegexFlag) *RegexExtractor {
 	for _, f := range flags {
 		if _, b := flagMap[f]; b {
 			flagMap[f] = true
@@ -30,26 +29,26 @@ func NewRegexExtractor(entityName string, pattern string, flags ...RegexFlag) *R
 				"You should choose one from the go-nlp lib constants, ex: IGNORECASE", f)
 		}
 	}
+
 	re := adjustPattern(pattern, flagMap)
 
 	return &RegexExtractor{
-		EntityName: entityName,
-		Pattern:    re,
-		Flags:      flagMap,
+		Pattern: re,
+		Flags:   flagMap,
 	}
 }
 
 // GetEntity extracts any match with the fixed pattern and flags.
 //
-// It returns a map with one entry , the entity name and the slice of match.
-func (ext *RegexExtractor) GetEntity(s string) map[string][]string {
-	res := make(map[string][]string)
+// It returns a slice of match.
+func (ext *RegexExtractor) GetEntity(s string) (res []string) {
 	for _, match := range ext.Pattern.FindAllString(s, -1) {
 		if match != "" {
-			res[ext.EntityName] = append(res[ext.EntityName], match)
+			res = append(res, match)
 		}
 	}
-	return res
+
+	return
 }
 
 // GetSentences allows us to get back any sentences that contains a match with our pattern.
@@ -59,5 +58,6 @@ func (ext *RegexExtractor) GetSentences(slice []string) (res []string) {
 			res = append(res, val)
 		}
 	}
+
 	return
 }

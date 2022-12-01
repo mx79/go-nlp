@@ -17,14 +17,17 @@ func checkEntries(a, b string) int {
 	if a == b {
 		return 0
 	}
+
 	return -1
 }
 
-// min
+// min is a utility func used to determinate
+// the minimum number between two numbers.
 func min(a, b int) int {
 	if a < b {
 		return a
 	}
+
 	return b
 }
 
@@ -34,6 +37,7 @@ func min(a, b int) int {
 //	if check := checkEntries(a, b); check != -1 {
 //		return check
 //	}
+//
 //	// D is an array of lengthString1+1 rows and lengthString2+1 columns
 //	// D is indexed from 0, strings from 1
 //	// i and j are indexes
@@ -41,14 +45,17 @@ func min(a, b int) int {
 //	D := make([][]int, len(a)+1)
 //	cost := make([][]int, len(a))
 //	var i, j int
+//
 //	// Init D matrix
 //	for idx := range D {
 //		D[idx] = make([]int, len(b)+1)
 //	}
+//
 //	// Init cost matrix
 //	for idx := range cost {
 //		cost[idx] = make([]int, len(b))
 //	}
+//
 //	// Charging matrix D with our strings a and b
 //	for i = 0; i < len(D); i++ {
 //		D[i][0] = i
@@ -56,6 +63,7 @@ func min(a, b int) int {
 //	for j = 0; j < len(D[0]); j++ {
 //		D[0][j] = j
 //	}
+//
 //	// Charging matrix cost with our strings a and b
 //	for i = 0; i < len(a); i++ {
 //		for j = 0; j < len(b); j++ {
@@ -67,6 +75,7 @@ func min(a, b int) int {
 //		}
 //	}
 //	fmt.Printf("cost matrix %v\n", cost)
+//
 //	// Levenshtein algorithm
 //	for i = 1; i < len(a); i++ {
 //		for j = 1; j < len(b); j++ {
@@ -79,19 +88,21 @@ func min(a, b int) int {
 //		}
 //	}
 //	fmt.Printf("D matrix %v\n", D)
+//
 //	return D[len(a)][len(b)]
 //}
 
-// WordErrorRate is the  distance between
-// two sentences at the word level
+// WordErrorRate is the distance between two sentences at the word level.
 func WordErrorRate(a, b string) float64 {
 	var (
 		res int
 		str []string
 	)
+
 	if check := checkEntries(a, b); check != -1 {
 		return float64(check)
 	}
+
 	elemA := clean.Tokenize(a, true)
 	elemB := clean.Tokenize(b, true)
 	if len(elemA) < len(elemB) {
@@ -101,10 +112,12 @@ func WordErrorRate(a, b string) float64 {
 		str = elemB
 		res += len(elemB) - len(elemA)
 	}
+
 	for index := range str {
 		if elemA[index] != elemB[index] {
 			res++
 		}
 	}
+
 	return math.Abs(float64(res)) / float64(len(str))
 }

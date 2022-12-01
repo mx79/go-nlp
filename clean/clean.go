@@ -1,7 +1,7 @@
 package clean
 
 import (
-	"github.com/mx79/go-nlp/go-utils"
+	"github.com/mx79/go-nlp/utils"
 	"golang.org/x/text/runes"
 	"golang.org/x/text/transform"
 	"golang.org/x/text/unicode/norm"
@@ -15,32 +15,33 @@ import (
 // and the simple quote as their used into some languages
 func RemovePunctuation(s string) string {
 	punctuation := "!@#$%^&*()[]{}<>_+?:.,;"
+
 	for _, c := range punctuation {
 		s = strings.Replace(s, string(c), "", -1)
 	}
+
 	return s
 }
 
 // RemoveAccent allows you to remove the accents in a sentence
 func RemoveAccent(s string) string {
 	t := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
+
 	output, _, err := transform.String(t, s)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	return output
 }
 
-// Lower puts words of a sentence in lowercase mode
-func Lower(s string) string {
-	return strings.ToLower(s)
-}
-
-// Tokenize returns a sentence broken into tokens. Tokens are individual
-// words as well as punctuation. For example, "Hi! How are you?" becomes
+// Tokenize returns a sentence broken into tokens.
+//
+// Tokens are individual words as well as punctuation.
+//
+// For example, "Hi! How are you?" becomes
 // []string{"Hi", "!", "How", "are", "you", "?"}.
-func Tokenize(sent string, withPunct bool) []string {
-	var tokens []string
+func Tokenize(sent string, withPunct bool) (tokens []string) {
 	for _, w := range strings.Fields(sent) {
 		var found []int
 		for i, r := range w {
@@ -87,5 +88,5 @@ func Tokenize(sent string, withPunct bool) []string {
 			}
 		}
 	}
-	return go_utils.SliceDeleteItem(tokens, "")
+	return utils.SliceDeleteItem(tokens, "")
 }

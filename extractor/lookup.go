@@ -2,7 +2,7 @@ package extractor
 
 import (
 	"encoding/json"
-	"github.com/mx79/go-nlp/go-utils"
+	"github.com/mx79/go-nlp/utils"
 	"io"
 	"log"
 	"os"
@@ -87,7 +87,7 @@ func (ext *LookupExtractor) GetEntity(s string) map[string]interface{} {
 			re = adjustPattern(pattern, ext.Flags)
 			if match := re.FindString(s); match != "" {
 				patternList = append(patternList, match)
-				patternList = go_utils.SortedSet(patternList)
+				patternList = utils.SortedSet(patternList)
 				if len(patternList) > 1 {
 					res[k] = patternList
 				} else {
