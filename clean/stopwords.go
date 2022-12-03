@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/mx79/go-nlp/utils"
 	"log"
+	"strings"
 )
 
 //go:embed ressources/stopwords.json
@@ -43,7 +44,7 @@ func NewStopwords(lang Lang) *Stopwords {
 // stopwordList retrieves a list of stopwords for a language
 func stopwordList(lang Lang, s GlobalStopwords) StopList {
 	if _, ok := s[lang]; !ok {
-		panic(LangError)
+		log.Fatal(LangError)
 	}
 
 	return s[lang]
@@ -56,6 +57,7 @@ func (stp *Stopwords) Stop(s string) (sent string) {
 			sent += word + " "
 		}
 	}
+	sent = strings.Trim(sent, " ")
 
 	return
 }

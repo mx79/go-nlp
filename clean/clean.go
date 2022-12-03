@@ -19,6 +19,7 @@ func RemovePunctuation(s string) string {
 	for _, c := range punctuation {
 		s = strings.Replace(s, string(c), "", -1)
 	}
+	s = strings.Trim(s, " ")
 
 	return s
 }
