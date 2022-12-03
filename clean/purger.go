@@ -35,12 +35,6 @@ func NewTextPurger(lang Lang, noStopword bool, stemming bool, noPunct bool, noAc
 //
 // It returns the sentence based on boolean values
 func (p *TextPurger) Purge(s string) string {
-	if p.NoStopword {
-		s = p.Stopwords.Stop(s)
-	}
-	if p.Stemming {
-		s = p.Stemmer.Stem(s)
-	}
 	if p.NoPunct {
 		s = RemovePunctuation(s)
 	}
@@ -49,6 +43,12 @@ func (p *TextPurger) Purge(s string) string {
 	}
 	if p.Lowercase {
 		s = strings.ToLower(s)
+	}
+	if p.NoStopword {
+		s = p.Stopwords.Stop(s)
+	}
+	if p.Stemming {
+		s = p.Stemmer.Stem(s)
 	}
 
 	return s

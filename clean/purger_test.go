@@ -9,17 +9,17 @@ var (
 		sentence string
 		want     string
 	}{
-		{"Je crois que je vais! faire, les tests maintenant?", "je crois vais faire tests maintenant"},
-		{"IL FAUT que çà mârche bien?? !OUI", "il faut ca marche bien oui"},
+		{"Je crois que je vais! faire, les tests maintenant?", "crois vais fair tests"},
+		{"IL FAUT que çà mârche bien?? !OUI", "faut ca march bien oui"},
 		{"on VA voir si ?ça marche là ou pas", "on va voir ca march"},
 	}
 	valEnPurgeText = []struct {
 		sentence string
 		want     string
 	}{
-		{"Let's see if IT works or not?", "let's see it work not"},
-		{"I want to see if the test pass or NOT?", "i want see test pass not"},
-		{",? !$$(( yes IT WORKS, text cleaned!!", "yes it works text cleaned"},
+		{"Let's see if IT works or not?", "see work"},
+		{"I want to see if the test pass or NOT?", "want see test pass"},
+		{",? !$$(( yes IT WORKS, text cleaned!!", "yes work text clean"},
 	}
 )
 
