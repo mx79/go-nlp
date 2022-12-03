@@ -21,6 +21,14 @@ type RegexExtractor struct {
 // from a sentence or a text, that is where this object can be useful
 // by implementing regular expression extraction from a pattern.
 func NewRegexExtractor(pattern string, flags ...RegexFlag) *RegexExtractor {
+	// Implementing Flags options in a flagMap.
+	var flagMap = map[RegexFlag]bool{
+		IGNORECASE:   false,
+		MULTILINE:    false,
+		MATCHNEWLINE: false,
+		UNGREEDY:     false,
+	}
+
 	for _, f := range flags {
 		if _, b := flagMap[f]; b {
 			flagMap[f] = true
@@ -38,10 +46,10 @@ func NewRegexExtractor(pattern string, flags ...RegexFlag) *RegexExtractor {
 	}
 }
 
-// GetEntity extracts any match with the fixed pattern and flags.
+// GetEntities extracts any match with the fixed pattern and flags.
 //
 // It returns a slice of match.
-func (ext *RegexExtractor) GetEntity(s string) (res []string) {
+func (ext *RegexExtractor) GetEntities(s string) (res []string) {
 	for _, match := range ext.Pattern.FindAllString(s, -1) {
 		if match != "" {
 			res = append(res, match)

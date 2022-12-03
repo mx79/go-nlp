@@ -18,14 +18,6 @@ const (
 	UNGREEDY     RegexFlag = "UNGREEDY"
 )
 
-// Implementing Flags options in a flagMap.
-var flagMap = map[RegexFlag]bool{
-	IGNORECASE:   false,
-	MULTILINE:    false,
-	MATCHNEWLINE: false,
-	UNGREEDY:     false,
-}
-
 // RegexFlag is an alias to string type,
 // makes just more clear about what kind of string it is.
 type RegexFlag string
@@ -46,12 +38,21 @@ type LookupExtractor struct {
 // from a sentence or a text, that is where this object can be useful
 // by implementing lookup expression extraction from a map.
 func NewLookupExtractor(regexFilePath string, flags ...RegexFlag) *LookupExtractor {
+	// Implementing Flags options in a flagMap.
+	var flagMap = map[RegexFlag]bool{
+		IGNORECASE:   false,
+		MULTILINE:    false,
+		MATCHNEWLINE: false,
+		UNGREEDY:     false,
+	}
+
 	// Opening the provided json
 	jsonFile, err := os.Open(regexFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer jsonFile.Close()
+
 	// Reading JSON file
 	byteValue, _ := io.ReadAll(jsonFile)
 	var dict map[string][]string
@@ -59,6 +60,8 @@ func NewLookupExtractor(regexFilePath string, flags ...RegexFlag) *LookupExtract
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Assign flag values to the map
 	for _, f := range flags {
 		if _, b := flagMap[f]; b {
 			flagMap[f] = true
@@ -74,14 +77,15 @@ func NewLookupExtractor(regexFilePath string, flags ...RegexFlag) *LookupExtract
 	}
 }
 
-// GetEntity allows us to get back any entity and
+// GetEntities allows us to get back any entity and
 // their corresponding matching pattern from our LookupExtractor dict.
-func (ext *LookupExtractor) GetEntity(s string) map[string]interface{} {
+func (ext *LookupExtractor) GetEntities(s string) map[string]interface{} {
 	res := make(map[string]interface{})
 	var (
 		patternList []string
 		re          *regexp.Regexp
 	)
+
 	for k, v := range ext.LookupTable {
 		for _, pattern := range v {
 			re = adjustPattern(pattern, ext.Flags)
@@ -97,6 +101,7 @@ func (ext *LookupExtractor) GetEntity(s string) map[string]interface{} {
 		}
 		patternList = []string{}
 	}
+
 	return res
 }
 
@@ -113,6 +118,7 @@ func (ext *LookupExtractor) GetSentences(slice []string) (res []string) {
 			}
 		}
 	}
+
 	return
 }
 
@@ -120,6 +126,7 @@ func (ext *LookupExtractor) GetSentences(slice []string) (res []string) {
 // flags selected and returns the new pattern.
 func adjustPattern(pattern string, flags map[RegexFlag]bool) *regexp.Regexp {
 	var opts string
+
 	for flag, activated := range flags {
 		if flag == IGNORECASE && activated {
 			opts += "(?i)"
@@ -134,5 +141,6 @@ func adjustPattern(pattern string, flags map[RegexFlag]bool) *regexp.Regexp {
 			opts += "(?U)"
 		}
 	}
+
 	return regexp.MustCompile(opts + pattern)
 }
