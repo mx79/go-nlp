@@ -52,13 +52,15 @@ func NewLookupExtractor(regexFilePath string, flags ...RegexFlag) *LookupExtract
 		log.Fatal(err)
 	}
 	defer jsonFile.Close()
+
 	// Reading JSON file
 	byteValue, _ := io.ReadAll(jsonFile)
 	var dict map[string][]string
-	err = json.Unmarshal(byteValue, &dict)
-	if err != nil {
+	if err = json.Unmarshal(byteValue, &dict); err != nil {
 		log.Fatal(err)
 	}
+
+	// Fill the flagMap
 	for _, f := range flags {
 		if _, b := flagMap[f]; b {
 			flagMap[f] = true
@@ -97,12 +99,14 @@ func (ext *LookupExtractor) GetEntity(s string) map[string]interface{} {
 		}
 		patternList = []string{}
 	}
+
 	return res
 }
 
 // GetSentences allows us to get back any sentences
 // that match a pattern from our LookupExtractor dict.
-func (ext *LookupExtractor) GetSentences(slice []string) (res []string) {
+func (ext *LookupExtractor) GetSentences(slice []string) []string {
+	res := make([]string, 0)
 	for _, v := range ext.LookupTable {
 		for _, pattern := range v {
 			for _, val := range slice {
@@ -113,7 +117,8 @@ func (ext *LookupExtractor) GetSentences(slice []string) (res []string) {
 			}
 		}
 	}
-	return
+
+	return res
 }
 
 // adjustPattern adjusts the pattern entered with
@@ -134,5 +139,6 @@ func adjustPattern(pattern string, flags map[RegexFlag]bool) *regexp.Regexp {
 			opts += "(?U)"
 		}
 	}
+
 	return regexp.MustCompile(opts + pattern)
 }

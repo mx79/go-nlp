@@ -41,23 +41,25 @@ func NewRegexExtractor(pattern string, flags ...RegexFlag) *RegexExtractor {
 // GetEntity extracts any match with the fixed pattern and flags.
 //
 // It returns a slice of match.
-func (ext *RegexExtractor) GetEntity(s string) (res []string) {
+func (ext *RegexExtractor) GetEntity(s string) []string {
+	res := make([]string, 0)
 	for _, match := range ext.Pattern.FindAllString(s, -1) {
 		if match != "" {
 			res = append(res, match)
 		}
 	}
 
-	return
+	return res
 }
 
 // GetSentences allows us to get back any sentences that contains a match with our pattern.
-func (ext *RegexExtractor) GetSentences(slice []string) (res []string) {
+func (ext *RegexExtractor) GetSentences(slice []string) []string {
+	res := make([]string, 0)
 	for _, val := range slice {
 		if match := ext.Pattern.FindString(val); match != "" {
 			res = append(res, val)
 		}
 	}
 
-	return
+	return res
 }

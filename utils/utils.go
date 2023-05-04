@@ -34,6 +34,7 @@ func SliceContains[T Global](slice []T, value T) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -76,6 +77,7 @@ func SliceDeleteItem[T Global](slice []T, value T) []T {
 			}
 		}
 	}
+
 	return slice
 }
 
@@ -83,21 +85,22 @@ func SliceDeleteItem[T Global](slice []T, value T) []T {
 //
 // It returns true if the elem in the map else false
 func MapContains[T Global](m map[T]T, value T) bool {
-	if _, ok := m[value]; ok {
-		return true
-	}
-	return false
+	_, ok := m[value]
+
+	return ok
 }
 
 // Set is a function that mimics the behavior of a set by removing
 // duplicate values in a slice, because the set type does not exist in Golang
-func Set[T Global](slice []T) (newSlice []T) {
+func Set[T Global](slice []T) []T {
+	var newSlice []T
 	for _, val := range slice {
 		if !SliceContains(newSlice, val) {
 			newSlice = append(newSlice, val)
 		}
 	}
-	return
+
+	return newSlice
 }
 
 // Sorted sorts the values of a slice of type:
@@ -118,8 +121,9 @@ func Sorted[T SubGlobal](slice []T) {
 // functions as explained in its name.
 //
 // But it only works for string, int and float64 types.
-func SortedSet[T SubGlobal](slice []T) (newSlice []T) {
-	newSlice = Set(slice)
+func SortedSet[T SubGlobal](slice []T) []T {
+	newSlice := Set(slice)
 	Sorted(newSlice)
-	return
+
+	return newSlice
 }

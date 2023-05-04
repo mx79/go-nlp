@@ -5,7 +5,7 @@ import "strings"
 // TextPurger object with boolean attributes to specify
 // which clean function we want to use or not.
 type TextPurger struct {
-	Language    Lang
+	Language    lang
 	Stopwords   *Stopwords
 	Stemmer     *Stemmer
 	NoStopword  bool
@@ -17,7 +17,7 @@ type TextPurger struct {
 }
 
 // NewTextPurger instantiates a new TextPurger object
-func NewTextPurger(lang Lang, noStopword bool, stemming bool, noPunct bool, noAccent bool, lowercase bool) *TextPurger {
+func NewTextPurger(lang lang, noStopword bool, stemming bool, noPunct bool, noAccent bool, lowercase bool) *TextPurger {
 	return &TextPurger{
 		Language:   lang,
 		Stopwords:  NewStopwords(lang),
@@ -51,5 +51,5 @@ func (p *TextPurger) Purge(s string) string {
 		s = strings.ToLower(s)
 	}
 
-	return s
+	return strings.TrimSpace(s)
 }

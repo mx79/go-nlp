@@ -11,8 +11,8 @@ import (
 //go:embed ressources/stemmer.json
 var stemmBytes []byte
 
-// stemms is the map containing stemms for any language
-var stemms = loadStemm(stemmBytes)
+// stemmData is the map containing stemms for any language
+var stemmData = loadStemm(stemmBytes)
 
 // Stemmer object
 //
@@ -20,30 +20,31 @@ var stemms = loadStemm(stemmBytes)
 // The root of a word is the part of the word that remains after removing its prefix and suffix,
 // namely its stem.
 type Stemmer struct {
-	Lang Lang
-	Dict StemmDict
+	Lang lang
+	Dict stemmDict
 }
 
 // loadStemm loads the map that contains the stemms in many languages
-func loadStemm(b []byte) (st Stemms) {
+func loadStemm(b []byte) stemms {
+	st := make(stemms)
 	err := json.Unmarshal(b, &st)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return
+	return st
 }
 
 // NewStemmer instantiates a new Stemmer object
-func NewStemmer(lang Lang) *Stemmer {
+func NewStemmer(lang lang) *Stemmer {
 	return &Stemmer{
 		Lang: lang,
-		Dict: stemmDict(lang, stemms),
+		Dict: stemmLang(lang, stemmData),
 	}
 }
 
-// stemmDict retrieves a map of stemms for a language
-func stemmDict(lang Lang, st Stemms) StemmDict {
+// stemmLang retrieves a map of stemms for a language
+func stemmLang(lang lang, st stemms) stemmDict {
 	if _, ok := st[lang]; !ok {
 		log.Fatal(LangError)
 	}

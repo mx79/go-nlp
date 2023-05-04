@@ -1,112 +1,37 @@
-package clean
+package clean_test
 
 import (
-	"fmt"
+	"github.com/mx79/go-nlp/clean"
 	"testing"
 )
 
-var valPurgeText = []struct {
-	name     string
-	sentence string
-	want     string
-}{
-	{},
-}
+func TestPurge(t *testing.T) {
+	examples := []struct {
+		purger   *clean.TextPurger
+		input    string
+		expected string
+	}{
+		{
+			purger:   clean.NewTextPurger(clean.FR, true, true, true, true, true),
+			input:    "Bonjour, comment allez-vous aujourd'hui ?",
+			expected: "bonjour allez-vous aujourd'hui",
+		},
+		{
+			purger:   clean.NewTextPurger(clean.EN, false, true, false, false, true),
+			input:    "The quick brown fox jumped over the dog.",
+			expected: "the quick brown fox jump over the dog.",
+		},
+		{
+			purger:   clean.NewTextPurger(clean.EN, true, false, true, true, false),
+			input:    "sells seashells by the seashore.",
+			expected: "sells seashells seashore",
+		},
+	}
 
-func TestPurgeText(t *testing.T) {
-
-}
-
-var valRemovePunctuation = []struct {
-	name     string
-	sentence string
-	want     string
-}{
-	{"valid", "dZLl! mep. :: ?dm, zm?", "dZLl mep  dm zm"},
-	{"invalid", "dZLl! mep. :: ?dm, zm?", "dZLl! mep. :: ?dm, zm?"},
-	{"valid", "!@#$%^&*()[]_+<>?:.,;", ""},
-	{"invalid", "!@#$%^&*()[]_+<>?:.,;", "!@#$%^&*()[]_+<>?:.,;"},
-	{"valid", "je fais, des ?tests !! est-ce que ça marche*", "je fais des tests est-ce que ça marche"},
-	{"valid", "je fais, des ?tests !! est-ce que ça marche*", "je fais, des ?tests !! est-ce que ça marche*"},
-}
-
-func TestRemovePunctuation(t *testing.T) {
-	for _, tt := range valRemovePunctuation {
-		want := RemovePunctuation(tt.sentence)
-		if want != tt.want {
-			fmt.Println("RemovePunct : échec du test")
+	for _, ex := range examples {
+		output := ex.purger.Purge(ex.input)
+		if output != ex.expected {
+			t.Errorf("Purge(%q) with result %q; expected %q", ex.input, output, ex.expected)
 		}
 	}
-}
-
-var valRemoveAccent = []struct {
-	name     string
-	sentence string
-	want     string
-}{
-	{},
-}
-
-func TestRemoveAccent(t *testing.T) {
-
-}
-
-var valStopwords = []struct {
-	name     string
-	sentence string
-	want     string
-}{
-	{},
-}
-
-func TestStopword(t *testing.T) {
-
-}
-
-var valLemmatize = []struct {
-	name     string
-	sentence string
-	want     string
-}{
-	{},
-}
-
-func TestLemmatize(t *testing.T) {
-
-}
-
-var valTokenize = []struct {
-	name     string
-	sentence string
-	want     string
-}{
-	{},
-}
-
-func TestTokenize(t *testing.T) {
-
-}
-
-var valLower = []struct {
-	name     string
-	sentence string
-	want     string
-}{
-	{},
-}
-
-func TestLower(t *testing.T) {
-
-}
-
-func main() {
-
-	fmt.Println(RemovePunctuation("dZLl! mep. :: ?dm, zm?"))
-	fmt.Println(Stopword("Je fais des tests pas sûr du tout que ce que je suis en train de faire puisse fonctionner"))
-	fmt.Println(RemoveAccent("Est-ce que ça marche ce truc là"))
-	fmt.Println(Lower("La P dfgT nfD"))
-	fmt.Println(Tokenize("allo oui ça va monsieur")[0])
-	fmt.Println(Lemmatize("Je fais des tests sur la lemmatization des mots avoir voudrais devoir"))
-	fmt.Println(PurgeText("Là je vais? TEster tout:: en même temPS! pour que ça marche",
-		true, true, true, true, true, false))
 }
