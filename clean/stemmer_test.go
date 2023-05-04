@@ -1,35 +1,32 @@
-package clean
+package clean_test
 
-import "testing"
-
-var (
-	valFrStem = []struct {
-		sentence string
-		want     string
-	}{
-		{"Je fais à les test là sur les mots", "Je fais à le test là sur le mot"},
-		{"On voit si les stopwords sont enlevés ou non", "On voit si le stopwords sont enlevés ou non"},
-	}
-	valEnStem = []struct {
-		sentence string
-		want     string
-	}{
-		{"I think I want to eliminate some words in the text here, let's see which one are removed",
-			"I think I want to elimin some word in the text here, let's see which one are remov"},
-		{"I'm doing some tests", "I'm do some test"},
-	}
+import (
+	"github.com/mx79/go-nlp/clean"
+	"testing"
 )
 
-func TestStemmer_Stem(t *testing.T) {
-	frSt := NewStemmer(FR)
-	for _, test := range valFrStem {
-		got := frSt.Stem(test.sentence)
-		AssertPass(t, got, test.want)
+func TestStem(t *testing.T) {
+	examples := []struct {
+		stemmer  *clean.Stemmer
+		input    string
+		expected string
+	}{
+		{
+			stemmer:  clean.NewStemmer(clean.FR),
+			input:    "autres",
+			expected: "autr",
+		},
+		{
+			stemmer:  clean.NewStemmer(clean.EN),
+			input:    "jumping",
+			expected: "jump",
+		},
 	}
 
-	enSt := NewStemmer(EN)
-	for _, test := range valEnStem {
-		got := enSt.Stem(test.sentence)
-		AssertPass(t, got, test.want)
+	for _, ex := range examples {
+		output := ex.stemmer.Stem(ex.input)
+		if output != ex.expected {
+			t.Errorf("Stem(%q) with result %q; expected %q", ex.input, output, ex.expected)
+		}
 	}
 }

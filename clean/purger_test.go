@@ -1,38 +1,37 @@
-package clean
+package clean_test
 
 import (
+	"github.com/mx79/go-nlp/clean"
 	"testing"
 )
 
-var (
-	valFrPurgeText = []struct {
-		sentence string
-		want     string
+func TestPurge(t *testing.T) {
+	examples := []struct {
+		purger   *clean.TextPurger
+		input    string
+		expected string
 	}{
-		{"Je crois que je vais! faire, les tests maintenant?", "crois vais fair tests"},
-		{"IL FAUT que çà mârche bien?? !OUI", "faut ca march bien oui"},
-		{"on VA voir si ?ça marche là ou pas", "on va voir ca march"},
-	}
-	valEnPurgeText = []struct {
-		sentence string
-		want     string
-	}{
-		{"Let's see if IT works or not?", "see work"},
-		{"I want to see if the test pass or NOT?", "want see test pass"},
-		{",? !$$(( yes IT WORKS, text cleaned!!", "yes work text clean"},
-	}
-)
-
-func TestPurgeText(t *testing.T) {
-	frPurger := NewTextPurger(FR, true, true, true, true, true)
-	for _, test := range valFrPurgeText {
-		got := frPurger.Purge(test.sentence)
-		AssertPass(t, got, test.want)
+		{
+			purger:   clean.NewTextPurger(clean.FR, true, true, true, true, true),
+			input:    "Bonjour, comment allez-vous aujourd'hui ?",
+			expected: "bonjour allez-vous aujourd'hui",
+		},
+		{
+			purger:   clean.NewTextPurger(clean.EN, false, true, false, false, true),
+			input:    "The quick brown fox jumped over the dog.",
+			expected: "the quick brown fox jump over the dog.",
+		},
+		{
+			purger:   clean.NewTextPurger(clean.EN, true, false, true, true, false),
+			input:    "sells seashells by the seashore.",
+			expected: "sells seashells seashore",
+		},
 	}
 
-	enPurger := NewTextPurger(EN, true, true, true, true, true)
-	for _, test := range valEnPurgeText {
-		got := enPurger.Purge(test.sentence)
-		AssertPass(t, got, test.want)
+	for _, ex := range examples {
+		output := ex.purger.Purge(ex.input)
+		if output != ex.expected {
+			t.Errorf("Purge(%q) with result %q; expected %q", ex.input, output, ex.expected)
+		}
 	}
 }

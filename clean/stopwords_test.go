@@ -1,41 +1,37 @@
-package clean
+package clean_test
 
-import "testing"
-
-func AssertPass(t *testing.T, got, want interface{}) {
-	if got != want {
-		t.Fatalf("=> Got: %v\n=> Want: %v", got, want)
-	}
-}
-
-var (
-	valFrStop = []struct {
-		sentence string
-		want     string
-	}{
-		{"Je fais à les test là sur les mots", "Je fais à test mots"},
-		{"On voit si les stopwords sont enlevés ou non", "On voit stopwords enlevés non"},
-	}
-	valEnStop = []struct {
-		sentence string
-		want     string
-	}{
-		{"I think I want to eliminate some words in the text here, let's see which one are removed",
-			"I think I want eliminate words text here, see one removed"},
-		{"I'm doing some tests", "I'm tests"},
-	}
+import (
+	"github.com/mx79/go-nlp/clean"
+	"testing"
 )
 
-func TestStopwords_Stop(t *testing.T) {
-	frSt := NewStopwords(FR)
-	for _, test := range valFrStop {
-		got := frSt.Stop(test.sentence)
-		AssertPass(t, got, test.want)
+func TestStopwords(t *testing.T) {
+	examples := []struct {
+		stopwords *clean.Stopwords
+		input     string
+		expected  string
+	}{
+		{
+			stopwords: clean.NewStopwords(clean.EN),
+			input:     "the quick brown fox jumped over the lazy dog.",
+			expected:  "quick brown fox jumped lazy dog.",
+		},
+		{
+			stopwords: clean.NewStopwords(clean.FR),
+			input:     "le chat est sur le tapis.",
+			expected:  "chat tapis.",
+		},
+		{
+			stopwords: clean.NewStopwords(clean.ES),
+			input:     "el perro corre por el parque.",
+			expected:  "perro corre parque.",
+		},
 	}
 
-	enSt := NewStopwords(EN)
-	for _, test := range valEnStop {
-		got := enSt.Stop(test.sentence)
-		AssertPass(t, got, test.want)
+	for _, ex := range examples {
+		output := ex.stopwords.Stop(ex.input)
+		if output != ex.expected {
+			t.Errorf("Stop(%q) with result %q; expected %q", ex.input, output, ex.expected)
+		}
 	}
 }

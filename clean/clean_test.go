@@ -1,57 +1,122 @@
-package clean
+package clean_test
 
 import (
 	"testing"
+
+	"github.com/mx79/go-nlp/clean"
 )
 
-var valRemovePunctuation = []struct {
-	sentence string
-	want     string
-}{
-	{"dZLl! mep. :: ?dm, zm?", "dZLl mep  dm zm"},
-	{"!@#$%^&*()[]_+<>?:.,;", ""},
-	{"je fais, des ?tests !!est-ce que ça marche*", "je fais des tests est-ce que ça marche"},
-}
-
 func TestRemovePunctuation(t *testing.T) {
-	for _, test := range valRemovePunctuation {
-		got := RemovePunctuation(test.sentence)
-		AssertPass(t, got, test.want)
+	examples := []struct {
+		input    string
+		expected string
+	}{
+		{
+			input:    "Hello, World!",
+			expected: "Hello World",
+		},
+		{
+			input:    "The quick brown fox jumped over the lazy dog.",
+			expected: "The quick brown fox jumped over the lazy dog",
+		},
+		{
+			input:    "Mary had a little lamb, its fleece was white as snow.",
+			expected: "Mary had a little lamb its fleece was white as snow",
+		},
+		{
+			input:    "This is a test.",
+			expected: "This is a test",
+		},
 	}
-}
 
-var valRemoveAccent = []struct {
-	sentence string
-	want     string
-}{
-	{"à des b c ü ê les", "a des b c u e les"},
-	{"àà les é ù Ï", "aa les e u I"},
-	{"ùùù ï î â aak", "uuu i i a aak"},
+	for _, ex := range examples {
+		output := clean.RemovePunctuation(ex.input)
+		if output != ex.expected {
+			t.Errorf("RemovePunctuation(%q) = %q; expected %q", ex.input, output, ex.expected)
+		}
+	}
 }
 
 func TestRemoveAccent(t *testing.T) {
-	for _, test := range valRemoveAccent {
-		got := RemoveAccent(test.sentence)
-		AssertPass(t, got, test.want)
+	examples := []struct {
+		input    string
+		expected string
+	}{
+		{
+			input:    "héllo wórld",
+			expected: "hello world",
+		},
+		{
+			input:    "à bientôt",
+			expected: "a bientot",
+		},
+		{
+			input:    "équipe de France",
+			expected: "equipe de France",
+		},
+		{
+			input:    "Beyoncé Knowles",
+			expected: "Beyonce Knowles",
+		},
+		{
+			input:    "Crème brûlée",
+			expected: "Creme brulee",
+		},
 	}
-}
 
-var valTokenize = []struct {
-	sentence string
-	want     []string
-}{
-	{"Je fais, les tests sur le tokenizer en place !", []string{"Je", "fais", ",", "les", "tests", "sur", "le", "tokenizer", "en", "place", "!"}},
-	{"I'm doing some tests with the tokenizer here! See?", []string{"I", "'", "m", "doing", "some", "tests", "with", "the", "tokenizer", "here", "!", "See", "?"}},
-	{"A last: test to see if this, is working well??", []string{"A", "last", ":", "test", "to", "see", "if", "this", ",", "is", "working", "well", "?", "?"}},
+	for _, ex := range examples {
+		output := clean.RemoveAccent(ex.input)
+		if output != ex.expected {
+			t.Errorf("RemoveAccent(%q) = %q; expected %q", ex.input, output, ex.expected)
+		}
+	}
 }
 
 func TestTokenize(t *testing.T) {
-	for _, test := range valTokenize {
-		got := Tokenize(test.sentence, true)
-		for idx := range got {
-			if got[idx] != test.want[idx] {
-				t.Fatalf("=> Got: %v\n=> Want: %v", got, test.want)
-			}
+	examples := []struct {
+		input    string
+		expected []string
+		withPunc bool
+	}{
+		{
+			input:    "Hi! How are you?",
+			expected: []string{"Hi", "!", "How", "are", "you", "?"},
+			withPunc: true,
+		},
+		{
+			input:    "The quick brown fox jumped over the lazy dog.",
+			expected: []string{"The", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog", "."},
+			withPunc: true,
+		},
+		{
+			input:    "Mary had a little lamb, its fleece was white as snow.",
+			expected: []string{"Mary", "had", "a", "little", "lamb", ",", "its", "fleece", "was", "white", "as", "snow", "."},
+			withPunc: true,
+		},
+		{
+			input:    "  This    is a     test.  ",
+			expected: []string{"This", "is", "a", "test", "."},
+			withPunc: true,
+		},
+	}
+
+	for _, ex := range examples {
+		output := clean.Tokenize(ex.input, ex.withPunc)
+		if !equalSlices(output, ex.expected) {
+			t.Errorf("Tokenize(%q, %t) = %v; expected %v", ex.input, ex.withPunc, output, ex.expected)
 		}
 	}
+}
+
+// equalSlices returns true if two string slices are equal.
+func equalSlices(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
 }

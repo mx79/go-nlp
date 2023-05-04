@@ -18,6 +18,14 @@ const (
 	UNGREEDY     RegexFlag = "UNGREEDY"
 )
 
+// Implementing Flags options in a flagMap.
+var flagMap = map[RegexFlag]bool{
+	IGNORECASE:   false,
+	MULTILINE:    false,
+	MATCHNEWLINE: false,
+	UNGREEDY:     false,
+}
+
 // RegexFlag is an alias to string type,
 // makes just more clear about what kind of string it is.
 type RegexFlag string
@@ -38,14 +46,6 @@ type LookupExtractor struct {
 // from a sentence or a text, that is where this object can be useful
 // by implementing lookup expression extraction from a map.
 func NewLookupExtractor(regexFilePath string, flags ...RegexFlag) *LookupExtractor {
-	// Implementing Flags options in a flagMap.
-	var flagMap = map[RegexFlag]bool{
-		IGNORECASE:   false,
-		MULTILINE:    false,
-		MATCHNEWLINE: false,
-		UNGREEDY:     false,
-	}
-
 	// Opening the provided json
 	jsonFile, err := os.Open(regexFilePath)
 	if err != nil {
@@ -56,12 +56,11 @@ func NewLookupExtractor(regexFilePath string, flags ...RegexFlag) *LookupExtract
 	// Reading JSON file
 	byteValue, _ := io.ReadAll(jsonFile)
 	var dict map[string][]string
-	err = json.Unmarshal(byteValue, &dict)
-	if err != nil {
+	if err = json.Unmarshal(byteValue, &dict); err != nil {
 		log.Fatal(err)
 	}
 
-	// Assign flag values to the map
+	// Fill the flagMap
 	for _, f := range flags {
 		if _, b := flagMap[f]; b {
 			flagMap[f] = true
@@ -77,15 +76,14 @@ func NewLookupExtractor(regexFilePath string, flags ...RegexFlag) *LookupExtract
 	}
 }
 
-// GetEntities allows us to get back any entity and
+// GetEntity allows us to get back any entity and
 // their corresponding matching pattern from our LookupExtractor dict.
-func (ext *LookupExtractor) GetEntities(s string) map[string]interface{} {
+func (ext *LookupExtractor) GetEntity(s string) map[string]interface{} {
 	res := make(map[string]interface{})
 	var (
 		patternList []string
 		re          *regexp.Regexp
 	)
-
 	for k, v := range ext.LookupTable {
 		for _, pattern := range v {
 			re = adjustPattern(pattern, ext.Flags)
@@ -107,7 +105,8 @@ func (ext *LookupExtractor) GetEntities(s string) map[string]interface{} {
 
 // GetSentences allows us to get back any sentences
 // that match a pattern from our LookupExtractor dict.
-func (ext *LookupExtractor) GetSentences(slice []string) (res []string) {
+func (ext *LookupExtractor) GetSentences(slice []string) []string {
+	res := make([]string, 0)
 	for _, v := range ext.LookupTable {
 		for _, pattern := range v {
 			for _, val := range slice {
@@ -119,14 +118,13 @@ func (ext *LookupExtractor) GetSentences(slice []string) (res []string) {
 		}
 	}
 
-	return
+	return res
 }
 
 // adjustPattern adjusts the pattern entered with
 // flags selected and returns the new pattern.
 func adjustPattern(pattern string, flags map[RegexFlag]bool) *regexp.Regexp {
 	var opts string
-
 	for flag, activated := range flags {
 		if flag == IGNORECASE && activated {
 			opts += "(?i)"
